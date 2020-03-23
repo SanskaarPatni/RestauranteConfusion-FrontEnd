@@ -13,7 +13,14 @@ export class DishService {
     return DISHES;
   }
 
+  getDish(id: string): Dish {
+    //filter out the first one which satisfies the condition
+    return DISHES.filter((dish) => dish.id == id)[0];
+  }
 
+  getFeaturedDish(): Dish {
+    return DISHES.filter((dish) => dish.featured == true)[0];
+  }
 
 
 }
