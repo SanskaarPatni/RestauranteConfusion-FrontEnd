@@ -12,12 +12,12 @@ export class PromotionService {
     return PROMOTIONS;
   }
 
-  getPromotion(id: string): Promotion {
+  getPromotion(id: string): Promise<Promotion> {
     //return  the first one which satisfies the condition
-    return PROMOTIONS.filter((promotion) => promotion.id == id)[0];
+    return Promise.resolve(PROMOTIONS.filter((promotion) => promotion.id == id)[0]);
   }
 
-  getFeaturedPromotion(): Promotion {
-    return PROMOTIONS.filter((promotion) => promotion.featured)[0];
+  getFeaturedPromotion(): Promise<Promotion> {
+    return Promise.resolve(PROMOTIONS.filter((promotion) => promotion.featured)[0]);
   }
 }
