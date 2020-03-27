@@ -46,18 +46,18 @@
       </mat-list-item>
     </mat-list>
 
-    <form novalidate [formGroup]="feedbackForm" #fform="ngForm" (ngSubmit)="onSubmit()">
-      <mat-list *ngIf="!feedbackForm.invalid">
+    <form novalidate [formGroup]="commentForm" #cform="ngForm" (ngSubmit)="onSubmit()">
+      <mat-list *ngIf="!commentForm.invalid">
         <mat-list-item>
-          <h1 matLine>{{feedbackForm.value.comment}}</h1>
+          <h1 matLine>{{commentForm.value.comment}}</h1>
           <p matLine>
             <span>
-              {{feedbackForm.value.rating}} Stars
+              {{commentForm.value.rating}} Stars
             </span>
           </p>
           <p matLine>
             <span>
-              --{{feedbackForm.value.author}}
+              --{{commentForm.value.author}}
             </span>
           </p>
         </mat-list-item>
@@ -83,7 +83,7 @@
         </mat-form-field>
       </p>
       <p>
-        <button type="submit" mat-button [disabled]="feedbackForm.invalid" class="background-primary text-floral-white">
+        <button type="submit" mat-button [disabled]="commentForm.invalid" class="background-primary text-floral-white">
           Submit
         </button>
       </p>
@@ -91,8 +91,12 @@
     </form>
   </div>
 
-  <div fxFlex [hidden]="dish">
+  <div fxFlex [hidden]="dish||errMess">
     <mat-spinner></mat-spinner>
     <h4>Loading ..Please Wait!</h4>
+  </div>
+  <div fxFlex *ngIf="errMess">
+    <h2>Error</h2>
+    <h4>{{errMess}}</h4>
   </div>
 </div>

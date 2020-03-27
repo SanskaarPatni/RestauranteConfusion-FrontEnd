@@ -3,33 +3,50 @@ import { Dish } from '../shared/dish';
 import { DISHES } from '../shared/dishes';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import { map } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
+import { map, catchError } from 'rxjs/operators';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { baseURL } from '../shared/baseurl';
-
+import { ProcessHTTPMsgService } from './process-httpmsg.service';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class DishService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    private processHTTPMsgService: ProcessHTTPMsgService) { }
 
   //updating everthing again using rxjs method 
   getDishes(): Observable<Dish[]> {
-    return this.http.get<Dish[]>(baseURL + 'dishes');
+    return this.http.get<Dish[]>(baseURL + 'dishes')
+      .pipe(catchError(this.processHTTPMsgService.handleError));
   }
   //filter out the first one which satisfies the condition
   getDish(id: string): Observable<Dish> {
-    return this.http.get<Dish>(baseURL + 'dishes/' + id);
+    return this.http.get<Dish>(baseURL + 'dishes/' + id)
+      .pipe(catchError(this.processHTTPMsgService.handleError));
   }
 
   getFeaturedDish(): Observable<Dish> {
     return this.http.get<Dish>(baseURL + 'dishes?featured=true')
-      .pipe(map(dishes => dishes[0]));
+      .pipe(map(dishes => dishes[0]))
+      .pipe(catchError(this.processHTTPMsgService.handleError));
   }
 
   getDishIds(): Observable<string[] | any> {
-    return this.getDishes().pipe(map(dishes => dishes.map(dish => dish.id)));
+    return this.getDishes()
+      .pipe(map(dishes => dishes.map(dish => dish.id)))
+      .pipe(catchError(error => error));
+  }
+
+  putDish(dish: Dish): Observable<Dish> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
+    return this.http.put<Dish>(baseURL + 'dishes/' + dish.id, dish, httpOptions)
+      .pipe(catchError(this.processHTTPMsgService.handleError));
   }
 }
